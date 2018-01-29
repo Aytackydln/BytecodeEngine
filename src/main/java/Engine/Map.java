@@ -1,7 +1,6 @@
 package Engine;
 
 import Engine.ShapedUnits.Rectangle;
-import Game.Main;
 
 import java.awt.*;
 import java.util.ArrayList;
