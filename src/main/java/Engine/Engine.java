@@ -1,5 +1,5 @@
 package Engine;
-/*0.2.0
+/*0.3.0
 
  */
 
@@ -83,7 +83,7 @@ public abstract class Engine extends JPanel {
 		frame.addComponentListener(new ComponentAdapter(){
 			@Override
 			public void componentResized(ComponentEvent e){
-				Camera.cam.updateScales();
+				camera.updateScales();
 			}
 		});
 		addKeyListener(comboListener);
@@ -300,9 +300,7 @@ public abstract class Engine extends JPanel {
 	}
 
 	public void setFrame(int x, int y){
-		Camera.width=x;
-		Camera.height=y;
-		frame.setSize(Camera.width, Camera.height);
+		frame.setSize(x, y);
 		camera.updateScales();
 
 	}
@@ -313,7 +311,6 @@ public abstract class Engine extends JPanel {
 	public void removeText(String identity){
 		for(Text t:texts)if(t.identity.equals(identity))texts.remove(t);
 	}
-
 	public void loadMap(Map map){
 		this.map=map;
 		frame.setTitle(map.name);

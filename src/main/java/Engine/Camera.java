@@ -6,6 +6,8 @@ public class Camera{
 	public double xPos, yPos;
 	public double viewScale=1.0;
 	public double viewLength;
+	public long viewWidth=1;
+	public long viewHeight=1;
 	public static Camera cam;
 	private final Frame frame;
 
@@ -50,14 +52,18 @@ public class Camera{
 		return (int) (a*viewScale);
 	}
 	public int screenXPos(double a){
-		return (int) ((a-xPos)*viewScale);
+		return (int) ((a-xPos)*viewScale+width/2);
 	}
 	public int screenYPos(double a){
-		return (int) ((a-yPos)*viewScale);
+		return (int) ((a-yPos)*viewScale+height/2);
 	}
 
 	public void updateScales(){
-		if(getFrameWidth()<getFrameHeight()){
+		width=Engine.engine.getWidth();
+		height=Engine.engine.getHeight();
+		double intendedRatio=viewHeight/viewWidth;
+		double actualRatio=getFrameHeight()/getFrameWidth();
+		if(intendedRatio<actualRatio){
 			viewScale=getFrameWidth()/viewLength;
 		}else{
 			viewScale=getFrameHeight()/viewLength;
