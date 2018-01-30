@@ -8,11 +8,11 @@ public class Unit{
 	public Map map;
 	public double xPos,yPos;
 	public int size;
-	protected long speed=0;
-	protected double xSpeed,ySpeed;
+	public long speed=0;
+	public double xSpeed,ySpeed;
 	public double rotation;
 	protected BufferedImage image;
-	protected AffineTransform transform=new AffineTransform();
+	public AffineTransform transform=new AffineTransform();
 	public boolean collides=true;
 	public boolean pierces=false;
 
