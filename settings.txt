@@ -1,0 +1,4 @@
+debug=false
+fps=64
+ups=128
+playerName=Nameless
