@@ -1,5 +1,5 @@
 package Engine;
-/*0.3.0
+/*0.3.1
 
  */
 
@@ -60,7 +60,7 @@ public abstract class Engine extends JPanel {
 	public static Random rng=new Random();
 	private ArrayList<Text> texts=new ArrayList<>();
 
-	protected Map map=new Map(200,300);
+	public Map map=new Map(200,300);
 	public final Camera camera;
 
 	public Engine(){
@@ -179,6 +179,7 @@ public abstract class Engine extends JPanel {
 
 	public void run(){
 		initialize();
+		camera.updateScales();
 
 		long lastUpdateTime=System.nanoTime();
 		long previousUpdateTime;
