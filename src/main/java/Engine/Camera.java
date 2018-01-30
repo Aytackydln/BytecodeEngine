@@ -5,18 +5,16 @@ import java.awt.*;
 public class Camera{
 	public double xPos, yPos;
 	public double viewScale=1.0;
-	public double viewLength;
-	public long viewWidth=1;
-	public long viewHeight=1;
+	public double viewWidth=200;
+	public double viewHeight=200;
 	public static Camera cam;
 	private final Frame frame;
 
 	public static int width, height;
 
-	Camera(Frame frame,long xPos, long yPos, double viewLength){
+	Camera(Frame frame,long xPos, long yPos){
 		this.frame=frame;
 		cam=this;
-		this.viewLength=viewLength;
 		this.xPos=xPos;
 		this.yPos=yPos;
 	}
@@ -32,7 +30,7 @@ public class Camera{
 	}
 
 	public void zoom(double delta){
-		viewLength+=delta;
+		viewScale+=delta;
 		updateScales();
 	}
 
@@ -64,17 +62,26 @@ public class Camera{
 		double intendedRatio=viewHeight/viewWidth;
 		double actualRatio=getFrameHeight()/getFrameWidth();
 		if(intendedRatio<actualRatio){
-			viewScale=getFrameWidth()/viewLength;
+			viewScale=getFrameWidth()/viewWidth;
+
+			System.out.println(frame.getWidth()+" "+frame.getHeight()+" if "+viewScale);
 		}else{
-			viewScale=getFrameHeight()/viewLength;
+			viewScale=getFrameHeight()/(viewHeight+100);
+
+			System.out.println(frame.getWidth()+" "+frame.getHeight()+" else "+viewScale);
 		}
+		System.out.println(viewHeight+" "+viewWidth);
 		if(Engine.debug) System.out.println("Zoom is now: "+viewScale);
 	}
 
 	public int getFrameWidth(){
-		return frame.getWidth();
+		int width=Engine.engine.getWidth();
+		if(width>0) return width;
+		else return 1;
 	}
 	public int getFrameHeight(){
-		return frame.getHeight();
+		int height=Engine.engine.getHeight();
+		if(height>0) return height;
+		else return 1;
 	}
 }

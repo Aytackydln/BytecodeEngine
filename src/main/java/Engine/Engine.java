@@ -35,7 +35,6 @@ public abstract class Engine extends JPanel {
 	public static int mouseX, mouseY;
 	ComboListener comboListener=new ComboListener(this);
 
-
 	public static ArrayList<String> variables=new ArrayList<>();
 	public String settingFile="settings.txt";
 
@@ -94,7 +93,7 @@ public abstract class Engine extends JPanel {
 
 		frame.setJMenuBar(menuBarimiz());
 		menuBar.setVisible(true);
-		camera=new Camera(frame,0, 0,450);
+		camera=new Camera(frame,0, 0);
 		if(resolutionObjs.size()==0){
 			System.out.println("no resolutions specified!");
 			setFrame(20,20);
