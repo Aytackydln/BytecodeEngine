@@ -1,4 +1,4 @@
 debug=false
 fps=64
-ups=126
-playerName=Nameless
+ups=128
+playerName=NamelessPimp
