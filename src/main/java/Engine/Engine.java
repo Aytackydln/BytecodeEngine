@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public abstract class Engine extends JPanel {
@@ -229,17 +230,8 @@ public abstract class Engine extends JPanel {
 				}
 
 				sleepTime=(tımeBetweenUpdates-codeTime)/1000000;
-				if(sleepTime>20){
-					long i=sleepTime/20-1;
-					for(;i>0;i--){
-						try{
-							Thread.sleep(20, 0);
-						}catch(Exception ignored){
-						}
-					}
-				}
 				try{
-					Thread.sleep(sleepTime%20, 0);
+					TimeUnit.MILLISECONDS.sleep(sleepTime);
 				}catch(Exception ignored){
 				}
 			}
@@ -336,4 +328,12 @@ public abstract class Engine extends JPanel {
 	 */
 	protected abstract void menuBar();
 	protected abstract void draw(Graphics g);
+
+	public double getMouseWorldY(){
+		return camera.screenToWorldYPos(mouseY);
+	}
+
+	public double getMouseWorldX(){
+		return camera.screenToWorldXPos(mouseX);
+	}
 }

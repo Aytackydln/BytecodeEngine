@@ -30,17 +30,15 @@ public class Map{
 		else if(y-u.size/2<-height/2)y=-height/2+u.size/2;
 
 		//Collision checks
-		double distanceSq;
 		if(u.collides)for(Unit other:units){
 			if(other!=u&&other.collides){
-				distanceSq=Math.pow(other.xPos-x, 2)+Math.pow(other.yPos-y, 2);
-				if(distanceSq<Math.pow(other.size/2+u.size/2, 2)){
+				if(u.collision.collides(other)){
 					u.collide(other);
 					if(!(u.pierces||other.pierces)){
-						double distancetoMove=Math.sqrt(distanceSq)-(u.size+other.size)/2;
+						double distanceSq=Math.pow(other.xPos-x, 2)+Math.pow(other.yPos-y, 2);
 						double angle=Math.atan2(y-other.yPos,x-other.xPos);
-						x-=Math.cos(angle)*distancetoMove;
-						y-=Math.sin(angle)*distancetoMove;
+						x-=u.collision.xKnockback(other,distanceSq,angle);
+						y-=u.collision.yKnockback(other,distanceSq,angle);
 					}
 				}
 			}

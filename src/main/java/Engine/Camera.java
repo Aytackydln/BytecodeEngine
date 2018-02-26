@@ -84,4 +84,12 @@ public class Camera{
 		if(height>0) return height;
 		else return 1;
 	}
+
+	public double screenToWorldXPos(int mouseX){
+		return (2*mouseX-width)/viewScale+xPos;
+	}
+
+	public double screenToWorldYPos(int mouseY){
+		return (2*mouseY-width)/viewScale+xPos;
+	}
 }

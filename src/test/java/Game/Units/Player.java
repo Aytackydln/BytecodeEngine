@@ -1,6 +1,7 @@
 package Game.Units;
 
 import Engine.*;
+import Engine.Collisions.SphereCollision;
 import Game.Main;
 import Game.Units.Projectiles.Arrow;
 import Game.Units.Projectiles.Slash;
@@ -25,11 +26,24 @@ public class Player extends Unit{
 		name=Main.playerName;
 
 		size=50;
+		collision=new SphereCollision(this,50);
 
 		try{
 			image=ImageIO.read(new File("eyes.png"));
 		}catch(IOException e){
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void collide(Unit u){
+		super.collide(u);
+
+		try{
+
+			//Thread.sleep(1000);
+		}catch(Exception e){
+
 		}
 	}
 

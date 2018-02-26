@@ -1,6 +1,7 @@
 package Game.Units.Monsters;
 
 import Engine.*;
+import Engine.Collisions.SphereCollision;
 import Game.Main;
 import Game.Units.MonsterBase;
 
@@ -17,6 +18,7 @@ public class Skeleton extends MonsterBase{
 			e.printStackTrace();
 		}
 		size=(image.getHeight()+image.getWidth())/2;
+		collision=new SphereCollision(this,size);
 	}
 
 	@Override

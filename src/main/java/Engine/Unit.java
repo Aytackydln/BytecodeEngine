@@ -1,5 +1,7 @@
 package Engine;
 
+import Engine.Collisions.SphereCollision;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -7,14 +9,15 @@ import java.awt.image.BufferedImage;
 public class Unit{
 	public Map map;
 	public double xPos,yPos;
-	public int size;
 	public long speed=0;
 	public double xSpeed,ySpeed;
 	public double rotation;
 	protected BufferedImage image;
 	public AffineTransform transform=new AffineTransform();
+	public Collision collision;
 	public boolean collides=true;
 	public boolean pierces=false;
+	public int size;
 
 	public void tick(double delta){
 		xSpeed=Math.cos(rotation)*speed*delta;
@@ -37,6 +40,7 @@ public class Unit{
 		map.unitsToAdd.add(this);
 		this.xPos=xPos;
 		this.yPos=yPos;
+		collision=new SphereCollision(this,size);
 	}
 
 	public void die(){
@@ -55,6 +59,6 @@ public class Unit{
 		System.out.println("Clicked on "+getClass());
 	}
 	public boolean clickHit(){
-		return Math.pow(getScreenXPos()-Engine.mouseX,2)+Math.pow(getScreenYPos()-Engine.mouseY,2)<=Math.pow(size,2);
+		return collision.intersects(Engine.engine.getMouseWorldX(),Engine.engine.getMouseWorldY());
 	}
 }
