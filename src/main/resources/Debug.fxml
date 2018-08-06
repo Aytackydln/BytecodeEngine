@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.141" fx:controller="Engine.DebugController">
+   <children>
+      <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" vgap="2.0">
+         <children>
+            <HBox>
+               <children>
+                  <Label minHeight="-Infinity" minWidth="-Infinity" text="Mouse(w):">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="mouseXW" layoutX="10.0" layoutY="10.0" minHeight="-Infinity" minWidth="20.0" text="xxx">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="mouseYW" layoutX="51.0" layoutY="10.0" minHeight="-Infinity" minWidth="20.0" text="yyy">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label minHeight="-Infinity" minWidth="-Infinity" text="Mouse(p):">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="mouseXP" layoutX="10.0" layoutY="10.0" minHeight="-Infinity" minWidth="20.0" text="xxx">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="mouseYP" layoutX="51.0" layoutY="10.0" minHeight="-Infinity" minWidth="20.0" text="yyy">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label minHeight="-Infinity" minWidth="-Infinity" text="UPS: ">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="upsShower" minHeight="-Infinity" minWidth="20.0" text="0">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label minHeight="-Infinity" minWidth="-Infinity" text="FPS: ">
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="fpsShower" minHeight="-Infinity" minWidth="20.0" text="0">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label minHeight="-Infinity" minWidth="-Infinity" text="Delta:">
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                  </Label>
+                  <Label fx:id="deltShower" minHeight="-Infinity" minWidth="20.0" text="0">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label minHeight="-Infinity" minWidth="-Infinity" text="MesuredTimeScale">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label fx:id="mesTimeScaShower" minHeight="-Infinity" minWidth="20.0" text="0">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </FlowPane>
+      <Separator prefWidth="200.0" />
+      <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10.0" vgap="2.0">
+         <children>
+            <HBox alignment="CENTER">
+               <children>
+                  <CheckBox fx:id="debufCheck" mnemonicParsing="false" onAction="#setDebug" text="Debug">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                  </CheckBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER">
+               <children>
+                  <Label minHeight="-Infinity" minWidth="-Infinity" text="FPS: ">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="fpsChanger" prefWidth="40.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER">
+               <children>
+                  <Label minHeight="-Infinity" minWidth="-Infinity" text="UPS: ">
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="upsChanger" prefWidth="40.0" />
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" onAction="#updateSettings" text="Set" />
+         </children>
+      </FlowPane>
+      <HBox fx:id="outputContainer" layoutX="10.0" layoutY="210.0" VBox.vgrow="ALWAYS">
+         <children>
+            <TextArea fx:id="output" editable="false" prefHeight="200.0" HBox.hgrow="ALWAYS" />
+         </children></HBox>
+      <HBox layoutX="10.0" layoutY="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#clearConsole" text="Clear console" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

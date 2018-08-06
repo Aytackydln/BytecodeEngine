@@ -3,13 +3,12 @@ package Engine;
 
  */
 
-import Engine.MenuItems.Fps;
-import Engine.MenuItems.Resolution;
-import Engine.MenuItems.Ups;
+import Engine.MenuItems.GameButton;
+import org.jbox2d.callbacks.DebugDraw;
+import org.jbox2d.common.OBBViewportTransform;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,94 +16,43 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
-public abstract class Engine extends JPanel {
-	protected static boolean run=true;
-	public static boolean debug;
-	protected boolean showStats=true;
-	public static Engine engine;
-	protected final JFrame frame;
-
-	//inputs
-	final static Set<Integer> keyToAdd=new TreeSet<>();
-	public final static Set<Integer> pressed=new TreeSet<>();
-	final static Set<Integer> keyToRemove=new TreeSet<>();
-	public static boolean clicked=false;
-	static boolean clicking=false;
-	public static int mouseX, mouseY;
-	ComboListener comboListener=new ComboListener(this);
-
-	public static ArrayList<String> variables=new ArrayList<>();
-	public String settingFile="settings.txt";
-
-	public int fps, ups;
-	private static int gameHertz=128;
-	static private int target_fps=64;
-	long tımeBetweenUpdates=1000000000/gameHertz;
-	long targetTımeBetweenRenders=1000000000/target_fps;
-	static final double maxDelta=0.03191;    //as seconds
-	public static double delta=0;    		//as seconds
-	long codeTime;							//as nanoseconds
-	static long sleepTime=0;    				//as miliseconds, dynamically change depending on code intensity
-	private int frameCount, updateCount;
-
-	JMenuBar menuBar;
-	public JMenu menu1; //Game
-	public JMenu menu2;	//Engine
-	public JMenuItem m11; //reset
-	public JMenuItem m21; //Show stats
-	public ArrayList<Resolution> resolutionObjs=new ArrayList<>();
+public abstract class Engine{
+	public static boolean run=true;
+	public static boolean debug=true;
+	protected static ArrayList<String> variables=new ArrayList<>();
+	private final Ticker ticker;
+	private final JoglDebugDraw debugDraw;
+	public Map map;
 
 	public static Random rng=new Random();
 	private ArrayList<Text> texts=new ArrayList<>();
-
-	public Map map=new Map(200,300);
-	public final Camera camera;
+	private String settingFile="settings.txt";
 
 	public Engine(){
-
+		Input.engine=this;
 		readSett();
-		System.setProperty("sun.java2d.opengl", "true");
-		engine=this;
-		variables.addAll(new ArrayList<>(Arrays.asList("debug", "fps", "ups")));
 
-		frame=new JFrame("ByteEngine");
-		frame.setLocation(200, 20);
-		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		frame.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent windowEvent) {
-				run=false;
-			}
+		variables.addAll(new ArrayList<>(Arrays.asList("debug")));
 
-		});
-		frame.addComponentListener(new ComponentAdapter(){
-			@Override
-			public void componentResized(ComponentEvent e){
-				camera.updateScales();
-			}
-		});
-		addKeyListener(comboListener);
-		addMouseListener(comboListener);
-		addMouseMotionListener(comboListener);
+		final BPanel panel=new BPanel(this);
+		final BFrame frame=new BFrame("Bytecode Engine", panel);
+		final ComboListener comboListener=new ComboListener(this,frame);
 
-		resolutions();  //abstract TODO might delete because window is resizable
+		//debugDraw=new DebugDrawJ2D(panel,false);
+		debugDraw=new JoglDebugDraw(panel);
+		debugDraw.appendFlags(DebugDraw.e_shapeBit);
+		debugDraw.appendFlags(DebugDraw.e_jointBit);
 
-		frame.setJMenuBar(menuBarimiz());
-		menuBar.setVisible(true);
-		camera=new Camera(frame,0, 0);
-		if(resolutionObjs.size()==0){
-			System.out.println("no resolutions specified!");
-			setFrame(20,20);
-		}
-		else{
-			setFrame(resolutionObjs.get(0).width,resolutionObjs.get(0).height);
-		}
+		Input.frame=frame;
+		GameButton.frame=frame;
+		ticker=new Ticker(this,panel,debug);
+		map=new Map(200,300);
 
-		setBackground(Color.BLACK);
-		setFocusable(true);
+		panel.addKeyListener(comboListener);
+		panel.addMouseListener(comboListener);
+		panel.addMouseMotionListener(comboListener);
 	}
 
 	private void readSett(){
@@ -143,7 +91,7 @@ public abstract class Engine extends JPanel {
 		}
 	}
 
-	public void saveConf(){
+	void saveConf(){
 		String s="";
 		for(String a:variables)
 			try{
@@ -152,149 +100,24 @@ public abstract class Engine extends JPanel {
 				try{
 					s+=a+"="+this.getClass().getField(a).get(this)+"\n";
 				}catch(Exception e1){
-					if(debug)System.out.println("There was an error saving "+a+e1);
-					e1.printStackTrace();
+					try{
+						s+=a+"="+getClass().getField(a).get(this)+"\n";
+					}catch(Exception e2){
+						if(debug)System.out.println("There was an error saving "+a+e1);
+						e1.printStackTrace();
+					}
 				}
 			}
-		Formatter f=null;
-		try{
-			f=new Formatter(new File(settingFile));
-		}catch(FileNotFoundException e){
+		try(Formatter f=new Formatter(new File(settingFile))){
+			f.format(s);
+		}catch(Exception e){
 			e.printStackTrace();
 		}
-		f.format(s);
-		f.close();
 		if(debug)System.out.println("saved configs");
-	}
-
-	protected void paintComponent(Graphics g){
-		super.paintComponent(g);
-		if(showStats){
-			g.drawString("FPS: "+fps+"    UPS:"+ups, 5, 10);
-		}
-		for(Text t : texts) t.render(g);
-		for(Unit u:map.staticUnits)u.render(g);
-		draw(g);
-	}
-
-	public void run(){
-		initialize();
-		camera.updateScales();
-
-		long lastUpdateTime=System.nanoTime();
-		long previousUpdateTime;
-		long lastRenderTime=0;
-
-		frame.add(this);
-		frame.setVisible(true);
-
-		new TimedEvent(500){
-			@Override
-			public void run(){
-				while(run){
-					super.run();
-					ups=updateCount*2;
-					updateCount=0;
-					fps=frameCount*2;
-					frameCount=0;
-					getGraphics().dispose();
-				}
-			}
-		}.start(); //fps and ups updater
-		// Game loop
-		while(run){
-			if(System.nanoTime()-lastUpdateTime>=tımeBetweenUpdates){
-				previousUpdateTime=lastUpdateTime;
-				lastUpdateTime=System.nanoTime();
-				delta=(System.nanoTime()-(double) previousUpdateTime)/1000000000;
-				if(delta>maxDelta){
-					System.out.println("latency detected "+delta);
-					delta=maxDelta;
-				}
-
-
-				long timeBeforeCode=System.nanoTime();
-				pressed.addAll(keyToAdd);
-				keyToAdd.clear();
-				gameCodes();
-				pressed.removeAll(keyToRemove);
-				keyToRemove.clear();
-				if(!clicking)clicked=false;
-				codeTime=System.nanoTime()-timeBeforeCode;
-
-				updateCount++;
-				if(System.nanoTime()-lastRenderTime>=targetTımeBetweenRenders){
-					lastRenderTime=lastUpdateTime;
-					frame.repaint();
-					frameCount++;
-				}
-
-				sleepTime=(tımeBetweenUpdates-codeTime)/1000000;
-				try{
-					TimeUnit.MILLISECONDS.sleep(sleepTime);
-				}catch(Exception ignored){
-				}
-			}
-		}
-		saveConf();
-		System.exit(0);
 	}
 
 	public static void main(){
 		System.out.println("you must ivoke run() from implemented class");
-	}
-
-	private JMenuBar menuBarimiz(){
-		menuBar=new JMenuBar();
-		menu1=new JMenu("Game");
-		menu2=new JMenu("Engine");
-
-		m11=new JMenuItem("Reset");
-		m11.addActionListener(comboListener);
-		m21=new JMenuItem("Show Stats");
-		m21.addActionListener(comboListener);
-
-
-		menu1.add(m11);
-		menu2.add(m21);
-		menu2.addSeparator();
-		menu2.add("Resolution:");
-		for(JMenuItem i : resolutionObjs){	//resolutions need to be at seperate list to be set by Game class.
-			menu2.add(i);
-		}
-		menu2.addSeparator();
-		menu2.add("Game speed:");
-		new Ups(128);
-		new Ups(64);
-		new Ups(32);
-		menu2.add("FPS:");
-		new Fps(128);
-		new Fps(64);
-		new Fps(52);
-
-		menuBar.add(menu1);
-		menuBar.add(menu2);
-		menuBar();
-		return menuBar;
-	}
-
-	public void setFps(int fps){
-		target_fps=fps;
-		targetTımeBetweenRenders=1000000000/target_fps;
-		System.out.println(fps+" fps");
-	}
-
-	public void setUps(int ups){
-		gameHertz=ups;
-		tımeBetweenUpdates=1000000000/gameHertz;
-		System.out.println(ups+" ups");
-		if(debug)System.out.println("wait time: "+tımeBetweenUpdates);
-	}
-
-	public void setFrame(int x, int y){
-		frame.setSize(x, y);
-		camera.updateScales();
-
 	}
 
 	public void addText(String text, int xpos, int ypos){
@@ -305,35 +128,58 @@ public abstract class Engine extends JPanel {
 	}
 	public void loadMap(Map map){
 		this.map=map;
-		frame.setTitle(map.name);
+		map.tick(0);
+		map.setDebugDraw(debugDraw);
+		OBBViewportTransform view=new OBBViewportTransform();
+		//view.setCamera(0f,0f,1f);
+		debugDraw.setViewportTransform(view);
 	}
 
+	void render(Graphics g,Camera camera){
+		try{
+		for(Text t : texts) t.render(g,camera);
+		for(Unit u:map.units)u.render(g,camera);
+		draw(g,camera);
+		}catch(ConcurrentModificationException e){
+			if(debug){
+				System.out.println("Illegal modification");
+				e.printStackTrace();
+			}
+		}catch(NullPointerException e){
+			System.out.println("nothing to draw");
+		}
+	}
+	void drawDebug(){
+		try{
+			map.drawDebugData();
+		}catch(NullPointerException e){
+
+		}
+	}
+
+	abstract protected void draw(Graphics g,Camera camera);
 
 
-	protected abstract void gameCodes();
+	protected abstract void gameCodes(double delta, Set<Integer> pressed);
 	protected abstract void reset();
 	protected abstract void initialize();
-
-	/**
-	 * add resolutions as:
-	 * new Resolution(int width,int height)
-	 * each resolution should be at same ratio
-	 */
-	public abstract void resolutions();
-
-	/**
-	 * ?ref=new JMenuItem("?buttonName");
-	 * ?ref.addActionListener(this);
-	 * menu1.add(?ref);
-	 */
-	protected abstract void menuBar();
-	protected abstract void draw(Graphics g);
-
-	public double getMouseWorldY(){
-		return camera.screenToWorldYPos(mouseY);
+	protected void run(){
+		ticker.run();
 	}
-
-	public double getMouseWorldX(){
-		return camera.screenToWorldXPos(mouseX);
+	//public int getMouseX(){ return panel.mouseX; }
+	//public int getMouseY(){ return panel.mouseY; }
+	void insertKey(Integer key){
+		ticker.insertKey(key);
+	}
+	void removeKey(Integer key){
+		ticker.removeKey(key);
+	}
+	void setClicked(boolean clicked){
+		//ticker.setClicked(clicked);
+		if(clicked){
+			ticker.insertKey(MouseEvent.BUTTON1);
+		}else {
+			ticker.removeKey(MouseEvent.BUTTON1);
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package Engine.ShapedUnits;
 
+import Engine.Camera;
 import Engine.Map;
 
 import java.awt.*;
@@ -12,8 +13,8 @@ public class Button extends Rectangle{
 	}
 
 	@Override
-	public void render(Graphics g){
-		super.render(g);
-		g.drawString(text,getScreenXPos()+10,getScreenYPos()+30);
+	public void render(Graphics g, Camera camera){
+		super.render(g,camera);
+		g.drawString(text,getScreenXPos(camera)+10,getScreenYPos(camera)+30);
 	}
 }

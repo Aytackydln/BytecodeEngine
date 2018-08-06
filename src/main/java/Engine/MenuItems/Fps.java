@@ -1,6 +1,6 @@
 package Engine.MenuItems;
 
-import Engine.Engine;
+import Engine.Ticker;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +11,7 @@ public class Fps extends JMenuItem{
 	static ActionListener listener=new ActionListener(){
 		@Override
 		public void actionPerformed(ActionEvent e){
-			Engine.engine.setFps(((Fps) e.getSource()).fps);
+			Ticker.ticker.setFps(((Fps) e.getSource()).fps);
 		}
 	};
 
@@ -20,7 +20,6 @@ public class Fps extends JMenuItem{
 	public Fps(int fps){
 		this.fps=fps;
 		setText(""+fps);
-		Engine.engine.menu2.add(this);
 		addActionListener(listener);
 	}
 }

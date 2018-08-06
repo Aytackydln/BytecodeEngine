@@ -1,4 +1,2 @@
-debug=false
-fps=64
-ups=128
+debug=true
 playerName=NamelessPimp

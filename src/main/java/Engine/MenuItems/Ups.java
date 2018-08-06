@@ -1,6 +1,6 @@
 package Engine.MenuItems;
 
-import Engine.Engine;
+import Engine.Ticker;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +10,7 @@ public class Ups extends JMenuItem{
 	static ActionListener listener=new ActionListener(){
 		@Override
 		public void actionPerformed(ActionEvent e){
-			Engine.engine.setUps(((Ups) e.getSource()).ups);
+			Ticker.ticker.setUps(((Ups) e.getSource()).ups);
 		}
 	};
 
@@ -19,7 +19,6 @@ public class Ups extends JMenuItem{
 	public Ups(int ups){
 		this.ups=ups;
 		setText(""+ups);
-		Engine.engine.menu2.add(this);
 		addActionListener(listener);
 	}
 }

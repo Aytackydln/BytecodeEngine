@@ -19,7 +19,7 @@ public class Text{
 		this.size=size;
 		this.font=font;
 	}
-	public void render(Graphics g){
+	public void render(Graphics g, Camera camera){
 		g.setColor(color);
 		g.setFont(new Font("Sathu", font, size));
 		g.drawString(text, xpos, ypos);
