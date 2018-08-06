@@ -6,7 +6,7 @@
 
     <groupId>Aytackydln</groupId>
     <artifactId>BytecodeEngine</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.2</version>
 
     <build>
         <plugins>
